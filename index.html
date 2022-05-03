@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <!DOCTYPE html>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.js"></script>
+    <script src="https://malsup.github.io/jquery.form.js"></script>
+    <script src="xyr_data_modify.js"></script>
+    <script src="jquery-3.6.0.min.js"></script>
+    <script src="xyr_echarts_module.js"></script>
+    <script src="FileSaver.js"></script>
+    <script src="echarts.js"></script>
+    <title>Umap visualization</title>
+
+</head>
+<body oncontextmenu="return false;">
+
+
+<style>
+    .download {
+        margin-left: 900px;
+        margin-top: 500px;
+    }
+    .right {
+        margin-left: 900px;
+    }
+</style>
+<div id="loading" style="min-height:100%;text-align:center;visibility: hidden">
+        <div id="loading-text" class="text">loading</div>
+</div>
+
+<div id="upload_file" style="text-align: center;visibility: visible">
+    <h1>upload your data</h1>
+<!--    <form action="/submit_file" method="post" id="upload_form" name="upload_form" enctype="multipart/form-data">-->
+    <form id="upload_form">
+        <label for="umap">Choose an umap file(*.csv):</label>
+        <input type="file" id="umap" name="umapCSV"><br/><br/>
+        <label for="syllable">Choose a syllable matrix(*.csv):</label>
+        <input type="file" id="syllable" name="sylMAT"><br/><br/>
+        <button id="button_upload">Submit</button>
+    </form>
+    <button id="without_upload">Use data in folder</button>
+</div>
+
+
+<div class="right">
+    <p>
+        return zoom: double click<br/>
+        show syllable: mouse over<br/>
+        change label: selected zone [shift + ctrl + double click]<br/>
+        change series label: [shift + ctrl + click]<br/>
+        single select: ctrl+choose series<br/>
+        select all: alt+choose series
+    </p>
+</div>
+
+
+<div id="main" style="float:top;width: 800px;height:850px;visibility: hidden">
+</div>
+<div id="changeLabel" style="width: 150px;height:90px;background-color: darkgray;visibility: hidden;text-align: center;padding-top: 10px"></div>
+
+<!--<div id="syllabus" class="right" style="width: 150px;height:400px;visibility: visible"></div>-->
+<script type="text/javascript">
+    // Initialize the echarts instance based on the prepared dom
+    var UMAP = echarts.init(document.getElementById('main'));
+    $("#without_upload").click(function(){
+        $("#main")[0].style.visibility="visible";
+        $("#upload_file")[0].style.display="none";
+        $("#loading")[0].style.display="none";
+    });
+
+    function uploadFile(event){
+        console.log('btn pressed');
+        event.preventDefault()
+        var form = $('#upload_form')[0];
+        var formData = new FormData(form);
+        $.ajax({
+            type: "POST",
+            enctype: 'multipart/form-data',
+            url: "/submit_file",
+            data: formData,
+            processData: false,
+            contentType: false,
+            cache: false,
+            timeout: 600000,
+            beforeSend: function(){
+                $("#loading")[0].style.visibility="visible";
+                $("#upload_file")[0].style.display="none";
+            },
+            success: function (data) {
+                console.log("SUCCESS : ", data);
+                $("#main")[0].style.visibility="visible";
+                $("#upload_file")[0].style.display="none";
+                $("#loading")[0].style.display="none";
+                $("#downloadUmap")[0].style.visibility='visible';
+            },
+            error: function (e) {
+
+                $("#result").text(e.responseText);
+                console.log("ERROR : ", e);
+
+            }
+        });
+
+    };
+     document.getElementById('button_upload').addEventListener("click", uploadFile);
+</script>
+</body>
+</html>

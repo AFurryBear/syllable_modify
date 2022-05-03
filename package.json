@@ -1,0 +1,16 @@
+{
+  "dependencies": {
+    "browserify": "^17.0.0",
+    "child_process": "^1.0.2",
+    "csvtojson": "^2.0.10",
+    "echarts-stat": "^1.2.0",
+    "express": "^4.17.2",
+    "formidable": "^2.0.1",
+    "fs": "^0.0.1-security",
+    "http": "^0.0.1-security",
+    "jquery": "^3.6.0",
+    "json2csv": "^5.0.6",
+    "multer": "^1.4.4",
+    "path": "^0.12.7"
+  }
+}
